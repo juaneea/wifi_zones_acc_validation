@@ -13,9 +13,36 @@
       >
         Resetee su contraseña
       </h2>
+      <div
+        v-if="errors.notSame && !successMessage"
+        class="flex text-red-600 items-center justify-center mt-5"
+      >
+        {{ errors.notSame }}
+        <!-- Agrega aquí el código del icono y el mensaje que deseas mostrar -->
+      </div>
     </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div
+      v-if="successMessage"
+      class="flex text-green-600 items-center justify-center mt-5"
+    >
+      <svg
+        class="h-6 w-6 mr-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7"
+        ></path>
+      </svg>
+      <span>{{ successMessage }}</span>
+    </div>
+
+    <div v-if="!successMessage" class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="space-y-6" ref="form" @submit.prevent="handleSubmit">
         <div>
           <div class="flex items-center justify-between">
@@ -78,6 +105,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      isLoading: false,
+      successMessage: null,
       token: null,
       form: {
         password: "",
@@ -86,6 +115,7 @@ export default {
       errors: {
         password: null,
         passwordConfirmation: null,
+        notSame: null,
       },
       rules: {
         password: [
@@ -131,12 +161,16 @@ export default {
           }
         );
         console.log(response.data);
+        this.successMessage = "Contraseña restablecida con éxito";
       } catch (e) {
         const errors = e.response.data;
         this.errors.passwordConfirmation = errors.password_confirmation
           ? errors.password_confirmation[0]
           : null;
         this.errors.password = errors.password ? errors.password[0] : null;
+        if (errors.non_field_errors) {
+          this.errors.notSame = errors.non_field_errors[0];
+        }
       }
     },
   },
