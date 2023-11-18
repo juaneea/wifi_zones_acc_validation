@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import EmailValidation from "@/views/EmailValidation.vue";
 
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    name: "EmailValidation",
+    component: EmailValidation,
   },
   {
     path: "/reinicio",
