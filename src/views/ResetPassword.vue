@@ -52,20 +52,37 @@
               >Contraseña</label
             >
           </div>
-          <div class="mt-2">
+          <div class="mt-2 relative">
             <input
               id="password"
               name="password"
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               v-model="form.password"
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-300 sm:text-sm sm:leading-6"
             />
-            <span v-if="errors.password" class="text-red-600">{{
-              errors.password
-            }}</span>
+            <span
+              class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              @click="togglePasswordVisibility(0)"
+            >
+              <svg
+                class="h-5 w-5 text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm0-5a1 1 0 11-1-1 1 1 0 011 1zm1.64-4.17a4.5 4.5 0 00-6.36 0L10 9.7l1.64-1.64a4.5 4.5 0 000-6.36z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </span>
           </div>
         </div>
-
         <div>
           <div class="flex items-center justify-between">
             <label
@@ -74,14 +91,35 @@
               >Confirmación de contraseña</label
             >
           </div>
-          <div class="mt-2">
+          <div class="mt-2 relative">
             <input
               id="password"
               name="password"
-              type="password"
+              :type="showPasswordConfirmation ? 'text' : 'password'"
               v-model="form.passwordConfirmation"
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-yellow-300 sm:text-sm sm:leading-6"
             />
+            <span
+              class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              @click="togglePasswordVisibility(1)"
+            >
+              <svg
+                class="h-5 w-5 text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm0-5a1 1 0 11-1-1 1 1 0 011 1zm1.64-4.17a4.5 4.5 0 00-6.36 0L10 9.7l1.64-1.64a4.5 4.5 0 000-6.36z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </span>
             <span v-if="errors.passwordConfirmation" class="text-red-600">{{
               errors.passwordConfirmation
             }}</span>
@@ -107,6 +145,8 @@ export default {
     return {
       isLoading: false,
       successMessage: null,
+      showPassword: false,
+      showPasswordConfirmation: false,
       token: null,
       form: {
         password: "",
@@ -146,6 +186,13 @@ export default {
     this.token = this.$route.query.token;
   },
   methods: {
+    togglePasswordVisibility(type) {
+      if (type === 0) {
+        this.showPassword = !this.showPassword;
+      } else {
+        this.showPasswordConfirmation = !this.showPasswordConfirmation;
+      }
+    },
     async handleSubmit() {
       const data = {
         token: this.token,
